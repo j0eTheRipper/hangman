@@ -9,11 +9,11 @@ def hangman():
     randword = words[random.randint(0, len(words) - 1)]
     blanks = '-' * len(randword)
     tries = set()
-    lives = 9
+    lives = 8
     not_ascii = '~!@#$%^&*()_+`1234567890-=[]\\{}|;\':",./<>?'
-    while lives > 1:
+    while lives > 0:
         print('')
-        print(blanks)
+        print(blanks + '   You have', lives, 'lives left')
         guess = input('Input a letter: ')
         if guess in randword and guess not in tries:
             tries.add(guess)
@@ -36,7 +36,7 @@ def hangman():
         elif len(guess) == 1 and (guess.isupper() or guess in not_ascii):
             print('It is not an ASCII lowercase letter')
         elif len(guess) != 1:
-            print('You should print a single letter')
+            print('You should enter a single letter')
         else:
             tries.add(guess)
             print('No such letter in the word')
