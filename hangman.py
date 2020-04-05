@@ -1,48 +1,69 @@
 # Write your code here
 import random
-from words import words
+import words
 
 whileHolder = True
 
 
-def hangman():
-    randword = words[random.randint(0, len(words) - 1)]
-    blanks = '-' * len(randword)
-    tries = set()
-    lives = 8
-    not_ascii = '~!@#$%^&*()_+`1234567890-=[]\\{}|;\':",./<>?'
-    while lives > 0:
+def end_msg(randword, is_success):
+    if is_success:
         print('')
-        print(blanks + '   You have', lives, 'lives left')
-        guess = input('Input a letter: ')
+        print(randword + '\nYou guessed the word!\nYou survived!')
+    else:
+        print('You are hanged!')
+        print('')
+        print('The word was', randword)
+        print('')
+
+
+def blanks_parser(randword, blanks):
+    for i in randword:
+        if i == ' ':
+            blanks += ' '
+        else:
+            blanks += '-'
+
+
+def hangman():
+    randword = random.choice(words.physics)
+    blanks = ''
+    tries = set()
+    chances = 8
+    not_ascii = '~!@#$%^&*()_+`1234567890-=[]\\{}|;\':",./<>?'
+    blanks_parser(randword, blanks)
+
+    while chances > 0:
+        print('')
+        print(blanks)
+        guess = input('Input a letter or the whole word if you guessed it: ').lower()
         if guess in randword and guess not in tries:
             tries.add(guess)
-            for j in range(len(randword)):
-                if randword[j] == guess:
-                    blanks_ = ""
-                    blanks = list(blanks)
-                    blanks[j] = guess
-                    for x in blanks:
-                        blanks_ += x
-                    blanks = blanks_
+            if len(guess) == 1:
+                for j in range(len(randword)):
+                    if randword[j] == guess:
+                        blanks = list(blanks)
+                        blanks[j] = guess
+                        blanks = ''.join(blanks)
+            elif len(guess) > 1:
+                if guess == randword:
+                    end_msg(randword, True)
+                    break
             if randword == blanks:
-                print('')
-                print(blanks)
-                print('You guessed the word!')
-                print('You survived!')
+                end_msg(randword, True)
                 break
         elif guess in tries:
             print('You already typed this letter')
-        elif len(guess) == 1 and (guess.isupper() or guess in not_ascii):
-            print('It is not an ASCII lowercase letter')
-        elif len(guess) != 1:
-            print('You should enter a single letter')
+        elif guess in not_ascii:
+            print('This is not an English letter')
         else:
             tries.add(guess)
-            print('No such letter in the word')
-            lives -= 1
+            chances -= 1
+            if chances > 1:
+                print('Wrong!', 'You have', chances, 'chances of living!')
+            elif chances == 1:
+                print('Wrong!', 'You have only', chances, 'chance of living!')
     else:
-        print('You are hanged!')
+        end_msg(randword, False)
 
 
 print('H A N G M A N')
