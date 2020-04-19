@@ -16,21 +16,22 @@ def end_msg(randword, is_success):
         print('')
 
 
-def blanks_parser(randword, blanks):
+def blanks_parser(randword):
+    blanks = ''
     for i in randword:
         if i == ' ':
             blanks += ' '
         else:
             blanks += '-'
+    return blanks
 
 
 def hangman():
     randword = random.choice(words.physics)
-    blanks = ''
     tries = set()
     chances = 8
     not_ascii = '~!@#$%^&*()_+`1234567890-=[]\\{}|;\':",./<>?'
-    blanks_parser(randword, blanks)
+    blanks = blanks_parser(randword)
 
     while chances > 0:
         print('')
