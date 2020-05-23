@@ -1,12 +1,15 @@
 # Write your code here
 import random
 import words
+from Users import User
 
-whileHolder = True
+
+user = User(input('Hey bro, enter your name: '))
 
 
 def end_msg(randword, is_success):
     if is_success:
+        user.score_handler(10)
         print('')
         print(randword + '\nYou guessed the word!\nYou survived!\n')
     else:
@@ -36,6 +39,7 @@ def hangman(wordlist):
         print('')
         print(blanks)
         guess = input('Input a letter or the whole word if you guessed it: ').lower()
+
         if guess in randword and guess not in tries:
             tries.add(guess)
             if len(guess) == 1:
@@ -48,13 +52,23 @@ def hangman(wordlist):
                 if guess == randword:
                     end_msg(randword, True)
                     break
+
             if randword == blanks:
                 end_msg(randword, True)
                 break
         elif guess in tries:
             print('You already typed this letter')
+        elif '/' in guess:
+            if guess == '/whiteflag':
+                end_msg(randword, False)
+                break
+            elif guess == '/score':
+                print('your score is:', user.score)
+            else:
+                print('This is not a command')
         elif not guess.isalpha():
             print('This is not an English letter')
+            continue
         else:
             tries.add(guess)
             chances -= 1
@@ -66,21 +80,22 @@ def hangman(wordlist):
         end_msg(randword, False)
 
 
-print('H A N G M A N')
-while whileHolder:
-    menu = input('Select an option from the list:\n1: play\n2: exit\n> ')
+print(f"\nYo, what's up {user.usr_name}!")
+print(f'Your score is {user.score}\n')
+while True:
+    menu = input('Select an option from the list:\n1: play\n2: show your info\n3: exit\n> ')
     if menu == '1':
         word_menu = input('Select a category from the list:\n1: chemistry\n2: physics\n3: biology\n> ')
+        print('Type /whiteflag if you give up, /score to show your score')
         if word_menu == '1':
-            print('type /help for help or /whiteflag if you surrender\n')
             hangman(words.chemistry)
         elif word_menu == '2':
-            print('type /help for help or /whiteflag if you surrender\n')
             hangman(words.physics)
         else:
-            print('type /help for help or /whiteflag if you surrender\n')
             hangman(words.biology)
     elif menu == '2':
+        print(f'\n{user.usr_name}, {user.score} pts\n')
+    elif menu == '3':
         quit()
     else:
         continue
