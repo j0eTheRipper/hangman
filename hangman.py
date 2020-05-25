@@ -1,7 +1,7 @@
 # Write your code here
-import random
 import words
 from Users import User
+from Randword import Randword
 
 
 user = User(input('Hey bro, enter your name: '))
@@ -19,48 +19,37 @@ def end_msg(randword, is_success):
         print('')
 
 
-def blanks_parser(randword):
-    blanks = ''
-    for i in randword:
-        if i == ' ':
-            blanks += ' '
-        else:
-            blanks += '-'
-    return blanks
-
-
 def hangman(wordlist):
-    randword = random.choice(wordlist)
+    randword = Randword(wordlist)
     tries = set()
     chances = 8
-    blanks = blanks_parser(randword)
 
     while chances > 0:
         print('')
-        print(blanks)
+        print(randword.blanks)
         guess = input('Input a letter or the whole word if you guessed it: ').lower()
 
-        if guess in randword and guess not in tries:
+        if guess in randword.word and guess not in tries:
             tries.add(guess)
             if len(guess) == 1:
-                for j in range(len(randword)):
-                    if randword[j] == guess:
-                        blanks = list(blanks)
-                        blanks[j] = guess
-                        blanks = ''.join(blanks)
+                for j in range(len(randword.word)):
+                    if randword.word[j] == guess:
+                        randword.blanks = list(randword.blanks)
+                        randword.blanks[j] = guess
+                        randword.blanks = ''.join(randword.blanks)
             elif len(guess) > 1:
-                if guess == randword:
-                    end_msg(randword, True)
+                if guess == randword.word:
+                    end_msg(randword.word, True)
                     break
 
-            if randword == blanks:
-                end_msg(randword, True)
+            if randword.word == randword.blanks:
+                end_msg(randword.word, True)
                 break
         elif guess in tries:
             print('You already typed this letter')
         elif '/' in guess:
             if guess == '/whiteflag':
-                end_msg(randword, False)
+                end_msg(randword.word, False)
                 break
             elif guess == '/score':
                 print('your score is:', user.score)
@@ -77,7 +66,7 @@ def hangman(wordlist):
             elif chances == 1:
                 print('Wrong!', 'You have only', chances, 'chance of living!')
     else:
-        end_msg(randword, False)
+        end_msg(randword.word, False)
 
 
 print(f"\nYo, what's up {user.usr_name}!")
