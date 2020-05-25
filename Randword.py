@@ -1,5 +1,4 @@
 from random import choice
-import words
 
 
 class Randword:

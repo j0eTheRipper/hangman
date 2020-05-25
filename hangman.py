@@ -25,41 +25,42 @@ def hangman(wordlist):
     chances = 8
 
     while chances > 0:
-        print('')
-        print(randword.blanks)
-        guess = input('Input a letter or the whole word if you guessed it: ').lower()
+        print('\n' + randword.blanks)
+        usr_input = input('Input a letter or the whole word if you guessed it: ').lower()
 
-        if guess in randword.word and guess not in tries:
-            tries.add(guess)
-            if len(guess) == 1:
+        if usr_input in randword.word and usr_input not in tries:
+            tries.add(usr_input)
+            if len(usr_input) == 1:
                 for j in range(len(randword.word)):
-                    if randword.word[j] == guess:
+                    if randword.word[j] == usr_input:
                         randword.blanks = list(randword.blanks)
-                        randword.blanks[j] = guess
+                        randword.blanks[j] = usr_input
                         randword.blanks = ''.join(randword.blanks)
-            elif len(guess) > 1:
-                if guess == randword.word:
+            elif len(usr_input) > 1:
+                if usr_input == randword.word:
                     end_msg(randword.word, True)
                     break
 
             if randword.word == randword.blanks:
                 end_msg(randword.word, True)
                 break
-        elif guess in tries:
+        elif usr_input in tries:
             print('You already typed this letter')
-        elif '/' in guess:
-            if guess == '/whiteflag':
+        elif '/' in usr_input:
+            if usr_input == '/whiteflag':
                 end_msg(randword.word, False)
                 break
-            elif guess == '/score':
-                print('your score is:', user.score)
+            elif usr_input == '/chances':
+                print(f'you have {chances} chances of living')
+            elif usr_input == '/help':
+                print('/whiteflag if you give up\n/chances to see your chances of living')
             else:
                 print('This is not a command')
-        elif not guess.isalpha():
+        elif not usr_input.isalpha():
             print('This is not an English letter')
             continue
         else:
-            tries.add(guess)
+            tries.add(usr_input)
             chances -= 1
             if chances > 1:
                 print('Wrong!', 'You have', chances, 'chances of living!')
@@ -74,14 +75,16 @@ print(f'Your score is {user.score}\n')
 while True:
     menu = input('Select an option from the list:\n1: play\n2: show your info\n3: exit\n> ')
     if menu == '1':
-        word_menu = input('Select a category from the list:\n1: chemistry\n2: physics\n3: biology\n> ')
-        print('Type /whiteflag if you give up, /score to show your score')
+        word_menu = input('Select a category from the list:\n1: chemistry\n2: physics\n3: biology\nback\n> ')
+        print('Type one letter or the whole word if you guessed it.\n/help for help.')
         if word_menu == '1':
             hangman(words.chemistry)
         elif word_menu == '2':
             hangman(words.physics)
-        else:
+        elif word_menu == '3':
             hangman(words.biology)
+        elif word_menu == 'back':
+            continue
     elif menu == '2':
         print(f'\n{user.usr_name}, {user.score} pts\n')
     elif menu == '3':
