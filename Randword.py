@@ -10,3 +10,10 @@ class Randword:
                 self.blanks += ' '
             else:
                 self.blanks += '-'
+
+    def letter_parser(self, letter):
+        for i in range(len(self.word)):
+            if self.word[i] == letter:
+                self.blanks = list(self.blanks)
+                self.blanks[i] = letter
+                self.blanks = ''.join(self.blanks)

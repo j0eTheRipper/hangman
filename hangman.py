@@ -28,30 +28,28 @@ def hangman(wordlist):
         print('\n' + randword.blanks)
         usr_input = input('Input a letter or the whole word if you guessed it: ').lower()
 
-        if usr_input in randword.word and usr_input not in tries:
+        if usr_input in randword.word and usr_input not in tries:  # If the guess correct and not repeated
             tries.add(usr_input)
-            if len(usr_input) == 1:
-                for j in range(len(randword.word)):
-                    if randword.word[j] == usr_input:
-                        randword.blanks = list(randword.blanks)
-                        randword.blanks[j] = usr_input
-                        randword.blanks = ''.join(randword.blanks)
-            elif len(usr_input) > 1:
-                if usr_input == randword.word:
-                    end_msg(randword.word, True)
-                    break
 
-            if randword.word == randword.blanks:
+            if randword.word == randword.blanks:  # if the user guessed the hole word
                 end_msg(randword.word, True)
                 break
-        elif usr_input in tries:
+            else:
+                if len(usr_input) == 1:  # if the user entered a single letter
+                    randword.letter_parser(usr_input)
+                elif len(usr_input) > 1:  # if the user entered a whole word
+                    if usr_input == randword.word:
+                        end_msg(randword.word, True)
+                        break
+
+        elif usr_input in tries:  # if the input is already written
             print('You already typed this letter')
-        elif '/' in usr_input:
+        elif '/' in usr_input:  # if the input is a command
             if usr_input == '/whiteflag':
                 end_msg(randword.word, False)
                 break
             elif usr_input == '/chances':
-                print(f'you have {chances} chances of living')
+                print(f'you have {chances} chances of living' if chances > 1 else 'you have 1 chance of living')
             elif usr_input == '/help':
                 print('/whiteflag if you give up\n/chances to see your chances of living')
             else:
@@ -59,13 +57,10 @@ def hangman(wordlist):
         elif not usr_input.isalpha():
             print('This is not an English letter')
             continue
-        else:
+        else:  # if the input was an incorrect guess
             tries.add(usr_input)
             chances -= 1
-            if chances > 1:
-                print('Wrong!', 'You have', chances, 'chances of living!')
-            elif chances == 1:
-                print('Wrong!', 'You have only', chances, 'chance of living!')
+            print(f'you have {chances} chances of living' if chances > 1 else 'you have 1 chance of living')
     else:
         end_msg(randword.word, False)
 
